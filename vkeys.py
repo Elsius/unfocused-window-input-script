@@ -1,5 +1,6 @@
 import ctypes
 import time
+import random
 
 class WindowBot:
     # --- Windows Constants (Internal to the class) ---
@@ -16,12 +17,38 @@ class WindowBot:
     def _build_vk_map(self):
         # Creates the dictionary of Virtual Key codes.
         vks = {
-            'backspace': 0x08, 'tab': 0x09, 'enter': 0x0D, 'shift': 0x10, 'ctrl': 0x11,
-            'alt': 0x12, 'pause': 0x13, 'caps_lock': 0x14, 'esc': 0x1B, 'space': 0x20,
-            'page_up': 0x21, 'page_down': 0x22, 'end': 0x23, 'home': 0x24, 'left': 0x25,
-            'up': 0x26, 'right': 0x27, 'down': 0x28, 'insert': 0x2D, 'delete': 0x2E,
-            'f1': 0x70, 'f2': 0x71, 'f3': 0x72, 'f4': 0x73, 'f5': 0x74, 'f6': 0x75,
-            'f7': 0x76, 'f8': 0x77, 'f9': 0x78, 'f10': 0x79, 'f11': 0x7A, 'f12': 0x7B,
+            'backspace': 0x08, 
+            'tab': 0x09, 
+            'enter': 0x0D, 
+            'shift': 0x10, 
+            'ctrl': 0x11,
+            'alt': 0x12, 
+            'pause': 0x13, 
+            'caps_lock': 0x14, 
+            'esc': 0x1B, 
+            'space': 0x20,
+            'page_up': 0x21, 
+            'page_down': 0x22, 
+            'end': 0x23, 
+            'home': 0x24, 
+            'left': 0x25,
+            'up': 0x26, 
+            'right': 0x27, 
+            'down': 0x28, 
+            'insert': 0x2D, 
+            'delete': 0x2E,
+            'f1': 0x70, 
+            'f2': 0x71, 
+            'f3': 0x72, 
+            'f4': 0x73, 
+            'f5': 0x74, 
+            'f6': 0x75,
+            'f7': 0x76, 
+            'f8': 0x77, 
+            'f9': 0x78, 
+            'f10': 0x79, 
+            'f11': 0x7A, 
+            'f12': 0x7B,
         }
         # Numbers 0-9
         for i in range(10):
@@ -55,9 +82,13 @@ class WindowBot:
             ctypes.windll.user32.PostMessageW(self.hwnd, self.WM_KEYUP, vk, self._get_lparam(vk, "up"))
 
     def press(self, key, duration=0.05):
-        #A full down-and-up press.
+        # A full down-and-up press.
+        jitter = random.uniform(-0.01, 0.01)
+        final_duration = duration + jitter
+        if final_duration < 0.01: 
+            final_duration = 0.01
         self.key_down(key)
-        time.sleep(duration)
+        time.sleep(final_duration)
         self.key_up(key)
 
     def type_string(self, text, interval=0.05):
